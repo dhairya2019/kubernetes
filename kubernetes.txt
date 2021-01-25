@@ -1,0 +1,229 @@
+Kubernetes is a tool for managing docker containers and providing
+the complete infrsatructure to the application whether it is a single
+tier multi tier or microservce etc.
+
+If your container gets deleted you have keep on checking if the image is live or not
+but with the kubernetes it will monitor or manage the container automatically
+
+
+
+
+**Future 
+Multi node CLuster Environment
+
+
+Minikube is an tool to install single node kubernetes cluster inside a OS which
+acts both as master and slave/worker
+
+
+** How to install kubernetes program
+Requirements:
+Seperate OS/Virtualbox
+
+We can do this by using pre installed virtualmachine for kubernetes server which is 
+known as minikube
+
+Minikube only support Virtualbox and you need base os as windows
+
+*Minikube installation
+
+after installing minikube installer and virtual box
+
+just go to the durectiry where minikube.exe file is installed 
+
+ minikube.exe start --driver=virtualbox  --kubernetes-version=v1.20.0
+
+
+**Kubernetes guys provide client side tool to pass the commands to the k8s server using 
+kubectl program
+
+Now you have to install kubectl command in order to use your kuberenetes command from
+windows host
+
+Download the kubectl.exe
+
+Go to the same location in the minikube repo and run the curl command
+
+
+** Check if minikube has been setuped or not using minikube status command
+
+** If you launch any OS using Docker it is known as container but the same
+OS if you launch with Kubernetes it is known as Pods
+
+ ** To launch a container using kubectl command which will manage if 
+
+docker ps-> kubectl.exe get pods
+docker run --name=hello -dit -> kubectl.exe run myweb1 --image=vimal13/php
+docker rm -f myweb1-> kubectl.exe delete pod myweb1
+
+**Kubernetes has a controller which manages the failed part of the node
+and when it fails it again launches the same program for you that is why this 
+program is known as deployment controller
+
+
+
+Suppose if you are running a docker containers inside the RHEL8 so docker by default
+provide LAN or private networks so that each container can communicate with each other
+
+
+
+** If you want this feature you can use deployment controller
+command
+** kubectl.exe create deployment myweb1 --image=viml13/apache-webserver-php
+
+**They will launch a new one for you
+
+**kubectl.exe describe pods
+
+**minikube dashboard will launch WEBUI for your infrsatructure
+
+**kubectl get deployments-> to get all the deployments
+
+**but from outside world like your laptop you want to connect to the webserver using 
+ip it won't get connected as it is private ip
+So you need to expose it 
+docker run -it --name myweb -p 1234:80 dhairya77/apache 
+
+basically you are doing NAT'ing or PAT'ing of that particular port to the outside world
+
+kubectl expose deployment myweb --port=80 --type=NodePort //bind the random port to the port
+80 and ip is of Node
+
+kubectl scale deployment --replicas=4  //For scaling
+
+
+minikube service myweb --url
+
+**If you want to create a pod you can write code in yml file easily and get your code
+run as commads are less configurable and provides less functionality so we use yml file
+
+
+to run the file
+
+kubectl create -f file_name.yml
+
+
+
+**Replication COntroller
+It gives you a guarantee that the pod running in the kuberenets enviroment
+is continuously monitored by rc and if it fails it again relaunches it
+
+//TO check the rc
+kubectl get rc
+
+It is a type of kind in kuberenetes
+
+**Labeling is very important in kubernetes as services won't wor without labelling them
+
+if you want to delte and serach any pods with same data center and you want to stop 
+them due to compliance iisues you can directly go to the kuberenetes and close it
+
+**kubectl get pods -L app
+
+//You will get all the pods 
+
+
+The concept of load balkancing is known as reverse proxy in kubernetes
+
+Client is exposed to the ip of the load balancer and then it requests back to
+the backend servers 
+
+It has two advantage:
+
+Client need to just access on DNS and all the work is done by load balancer
+
+If the pods terminates and new pod is launched you need not to remenber multile
+ip
+
+If you want to use the concept of reverse proxy and load balancing in kuberenets
+you have a pre defined thing called service 
+
+It will by deafult manage the reverse proxy and the load balancing
+
+** Two types of ports are there in kuberenets
+
+1.Service Port
+Port of the load balancer is known as service port
+
+2.Target Port
+Port of the actual service running inside the container
+
+
+Now you hsve setupes load balancer but you won't be able to connect to the outside world
+or from your pc as it is the by default nature of load balancer
+
+By deafult the load balaner provides cluster ip to the  
+
+Within a cluster they provide load balancing or connectivity
+
+** there is a great use of cluster ip you can use this to connect to the databases
+ ** to connect to the microservice
+
+as you don't want to get connectivity from outside world
+
+
+If you want load balancer as well as load balancer and inside the nodeconn use CLuster IP
+
+If you want reverse proxy as well as load balancer and outside world connectivity use NodePort
+
+In nodeport:
+
+if client requests particular program inside a container there is no way possible
+as internally docker are isolated from the outside world
+
+if any client requests then the ip of our node which in our case is minikube as of now
+having any NodePort we want reverse procy to the load balancer port and again
+load balancer use reverse proxy and requests container program running port
+
+So NodePort->Service POrt->Target Port
+
+
+** Creating an multi-tier application
+
+//Creating an wordpress pod
+kubectl run wp1 --image=wordpress:5.1.1-php7.3-apache
+
+
+//Creating an mysql pod by setting up env variables
+kubectl run mydb1 --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=dhairya123 --env=MYSQL_DATABASE=dhairya --env=MYSQL_USER=dhairya --env=MYSQL_PASSWORD=dhairya123
+
+
+//Command to enter the pod
+
+kubectl exec -it pod_name -- bash
+
+//Command to check the log
+kubectl logs pod_name
+
+//command to check the url for the wordpress service
+minikube service pod_name --url
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
