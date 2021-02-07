@@ -1,0 +1,20 @@
+To install docker ce in rhel first configure yum inside /etc/yum.repos.d
+
+and then create a new file 
+
+
+and then go to the rpm link for docker ce and copy it
+
+
+then open the docker.repo file
+
+[docker]
+baseurl=https://download.docker.com/linux/centos/7/x86_64/stable/
+gpgcheck=0
+
+
+then execute the command
+
+yum install docker-ce --nobest
+
+Your docker will be installed in RHEL
